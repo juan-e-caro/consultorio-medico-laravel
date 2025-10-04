@@ -10,7 +10,7 @@ class HistorialController
 {
     public function index()
     {
-        $historial = Historial::all();
+        $historial = Historial::with(['pacientes.usuarios', 'citas.doctores.usuarios'])->get();
         return response()->json($historial);
     }
 

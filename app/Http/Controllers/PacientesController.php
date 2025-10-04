@@ -10,9 +10,11 @@ class PacientesController
 {
     public function index()
     {
-        $pacientes = Pacientes::all();
+        $pacientes = Pacientes::with(['usuarios'])->get();
+
         return response()->json($pacientes);
     }
+
 
     public function store(Request $request)
     {

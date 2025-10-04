@@ -10,7 +10,7 @@ class DoctoresController
 {
     public function index()
     {
-        $doctores = Doctores::all();
+        $doctores = Doctores::with(['usuarios', 'especialidades'])->get();
         return response()->json($doctores);
     }
 
@@ -32,7 +32,7 @@ class DoctoresController
 
     public function show(string $id)
     {
-        $doctores = Doctores::find($id);
+        $doctores = Doctores::with(['usuarios', 'especialidades'])->find($id);
 
         if(!$doctores){
             return response()->json(['message' => 'doctor no encontrado'],404);
@@ -69,6 +69,9 @@ class DoctoresController
         if(!$doctores){
             return response()->json(['message' => 'doctor no encontrado'],404);
         }
+
+        $doctores->delete();
+
         return response()->json(['message' => 'doctor eliminado con exito']);
     }
 }

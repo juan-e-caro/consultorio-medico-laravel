@@ -10,7 +10,8 @@ class HorariosController
 {
     public function index()
     {
-        $horarios = Horarios::all();
+        $horarios = Horarios::with('doctores.usuarios','consultorios')->get();
+
         return response()->json($horarios);
     }
 

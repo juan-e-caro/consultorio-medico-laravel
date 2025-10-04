@@ -17,7 +17,7 @@ class Pacientes extends Model
     ];
 
     public function usuarios(){
-        return $this->belongsTo(Usuarios::class, 'idUsuario');
+        return $this->belongsTo(Usuarios::class,'idUsuario');
     }
 
     public function citas(){
