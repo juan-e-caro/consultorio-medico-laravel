@@ -20,7 +20,7 @@ class UsuariosController
             'nombre' => 'required|string',
             'email' => 'required|string|max:255',
             'password' => 'required|string|max:255',
-            'rol' => 'required'
+            'roles' => 'required'
         ]);
         if ($validator->fails()){
             return response()->json($validator->errors(), 422);
@@ -52,7 +52,7 @@ class UsuariosController
             'nombre' => 'string',
             'email' => 'string|max:255',
             'password' => 'string|max:255',
-            'rol' => 'string'
+            'roles' => 'string'
         ]);
         if ($validator->fails()){
             return response()->json($validator->errors(), 422);

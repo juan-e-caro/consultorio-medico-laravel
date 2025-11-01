@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->string('nombre');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('rol'); // Admin, Doctor, Paciente, etc.
+            $table->enum('roles', ['usuario', 'doctor', 'administrador']); // Admin, Doctor, Paciente, etc.
             $table->timestamps();
         });
     }

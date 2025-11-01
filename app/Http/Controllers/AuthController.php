@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Usuarios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    // Registrar usuario
+    // Registrar usuarios
     public function registrar(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'roles' => 'required|string|max:10',
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:usuarios',
+            'password' => 'required|string|min:5|confirmed',
+            'roles' => 'sometimes|string|in:Paciente,Doctor,Admin'
         ]);
 
         if ($validator->fails()) {
@@ -26,23 +26,27 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::create([
-            'name' => $request->name,
+        $rol = $request->input('roles', 'Paciente'); // si no se envía, se asigna "Paciente"
+
+        $usuarios = Usuarios::create([
+            'nombre' => $request->nombre,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'roles' => $request->roles,
+            'roles' => $rol
         ]);
 
         // Crear token con Sanctum
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $usuarios->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'success' => true,
-            'user' => $user,
+            'usuarios' => $usuarios,
             'access_token' => $token,
             'token_type' => 'Bearer',
         ], 201);
     }
+
+
 
     // Login
     public function login(Request $request)
@@ -51,7 +55,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($data, [
             'email' => 'required|string|email',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string|min:5',
         ]);
 
         if ($validator->fails()) {
@@ -61,24 +65,29 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::where('email', $data['email'])->first();
+        $usuarios = Usuarios::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (!$usuarios || !Hash::check($data['password'], $usuarios->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Credenciales incorrectas',
             ], 401);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $usuarios->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'success' => true,
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'usuarios' => [             // 👈 nuevo bloque
+                'id' => $usuarios->id,
+                'nombre' => $usuarios->nombre,
+                'email' => $usuarios->email,
+                'roles' => $usuarios->roles,
+            ],
         ]);
     }
-
 
     // Logout (eliminar token actual)
     public function logout(Request $request)
@@ -96,18 +105,18 @@ class AuthController extends Controller
     {
         return response()->json([
             'success' => true,
-            'user' => $request->user(),
+            'usuarios' => $request->user(),
         ]);
     }
 
-    // Mostrar usuario por ID
+    // Mostrar usuarios por ID
     public function show($id)
     {
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        $usuarios = Usuarios::find($id);
+        if (!$usuarios) {
+            return response()->json(['message' => 'Usuarios no encontrado'], 404);
         }
 
-        return response()->json($user);
+        return response()->json($usuarios);
     }
 }
