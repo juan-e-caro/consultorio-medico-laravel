@@ -10,7 +10,6 @@ class Horarios extends Model
     protected $fillable = [
         'idDoctor',
         'idConsultorio',
-        'diaSemana',
         'horaInicio',
         'horaFin'
     ];

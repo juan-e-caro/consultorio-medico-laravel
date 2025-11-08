@@ -70,11 +70,14 @@ class PacientesController
 
     public function destroy(string $id)
     {
-        $pacientes = Pacientes::find($id);
+        $paciente = Pacientes::find($id);
 
-        if(!$pacientes){
+        if(!$paciente){
             return response()->json(['message' => 'paciente no encontrado'],404);
         }
-        return response()->json(['message' => 'paciente eliminado con exito']);
+
+        $paciente->delete();
+
+        return response()->json(['message' => 'paciente eliminado con éxito']);
     }
 }

@@ -68,9 +68,13 @@ class HistorialController
     {
         $historial = Historial::find($id);
 
-        if(!$historial){
-            return response()->json(['message' => 'historial no encontrado'],404);
+        if (!$historial) {
+            return response()->json(['message' => 'Historial no encontrado'], 404);
         }
-        return response()->json(['message' => 'historial eliminado con exito']);
+
+        // Delete the historial
+        $historial->delete();
+
+        return response()->json(['message' => 'Historial eliminado con éxito']);
     }
 }

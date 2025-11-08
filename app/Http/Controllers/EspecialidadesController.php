@@ -60,12 +60,15 @@ class EspecialidadesController
 
     public function destroy(string $id)
     {
-        $especialidades = Especialidades::find($id);
+        $especialidad = Especialidades::find($id);
 
-        if(!$especialidades){
+        if(!$especialidad){
             return response()->json(['message' => 'especialidad no encontrada'],404);
         }
-        return response()->json(['message' => 'especialidad eliminada
-         con exito']);
+
+        $especialidad->delete();
+
+        return response()->json(['message' => 'especialidad eliminada con éxito']);
     }
+
 }

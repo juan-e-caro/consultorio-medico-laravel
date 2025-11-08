@@ -60,11 +60,15 @@ class ConsultoriosController
 
     public function destroy(string $id)
     {
-        $consultorios = Consultorios::find($id);
+        $consultorio = Consultorios::find($id);
 
-        if(!$consultorios){
+        if(!$consultorio){
             return response()->json(['message' => 'consultorio no encontrado'],404);
         }
-        return response()->json(['message' => 'consultorio eliminado con exito']);
+
+        $consultorio->delete();
+
+        return response()->json(['message' => 'consultorio eliminado con éxito']);
     }
+
 }

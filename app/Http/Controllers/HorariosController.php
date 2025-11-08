@@ -20,7 +20,6 @@ class HorariosController
         $validator = Validator::make($request->all(),[
             'idDoctor' => 'required',
             'idConsultorio' => 'required',
-            'diaSemana' => 'required',
             'horaInicio' => 'required|date_format:H:i',
             'horaFin' => 'required|date_format:H:i'
 
@@ -54,7 +53,6 @@ class HorariosController
         $validator = Validator::make($request->all(),[
             'idDoctor' => 'string',
             'idConsultorio' => 'string',
-            'diaSemana' => 'string',
             'horaInicio' => 'date_format:H:i',
             'horaFin' => 'date_format:H:i'
 
@@ -72,8 +70,13 @@ class HorariosController
         $horarios = Horarios::find($id);
 
         if(!$horarios){
-            return response()->json(['message' => 'horaio no encontrado'],404);
+            return response()->json(['message' => 'horario no encontrado'],404);
         }
+
+        // Eliminar el registro
+        $horarios->delete();
+
         return response()->json(['message' => 'horario eliminado con exito']);
     }
+
 }
